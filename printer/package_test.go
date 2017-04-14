@@ -15,6 +15,7 @@ import (
 func Test(t *testing.T) {
 	_ = Suite(&PackageSuite{})
 	_ = Suite(&ServiceSuite{})
+	_ = Suite(&PrinterSuite{})
 	TestingT(t)
 }
 
