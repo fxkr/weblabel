@@ -21,3 +21,8 @@ func (s *ServiceSuite) TestStatus(c *C) {
 	service := NewService(s.logger)
 	c.Assert(service.Status(s.ctx), IsNil)
 }
+
+func (s *ServiceSuite) TestPrint(c *C) {
+	service := NewService(s.logger)
+	c.Assert(service.Print(s.ctx), IsNil)
+}

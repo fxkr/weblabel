@@ -10,6 +10,9 @@ type Service interface {
 
 	// Returns nil if the service is operational.
 	Status(ctx context.Context) error
+
+	// Sends a document to the printer.
+	Print(ctx context.Context) error
 }
 
 type service struct {
@@ -23,5 +26,9 @@ func NewService(logger log.Logger) Service {
 }
 
 func (s *service) Status(ctx context.Context) error {
+	return nil
+}
+
+func (s *service) Print(ctx context.Context) error {
 	return nil
 }

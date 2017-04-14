@@ -26,3 +26,14 @@ func (s *loggingService) Status(ctx context.Context) (err error) {
 	}(time.Now())
 	return s.Service.Status(ctx)
 }
+
+func (s *loggingService) Print(ctx context.Context) (err error) {
+	defer func(begin time.Time) {
+		s.logger.Log(
+			"method", "Print",
+			"took", time.Since(begin),
+			"err", err,
+		)
+	}(time.Now())
+	return s.Service.Print(ctx)
+}

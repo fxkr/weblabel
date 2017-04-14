@@ -1,6 +1,7 @@
 package printer
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"net/http"
@@ -35,6 +36,27 @@ func (s *PackageSuite) TestStatus(c *C) {
 	handler := MakeHandler(s.ctx, service, s.logger)
 
 	req := httptest.NewRequest("GET", "/printer/v1/status", nil).WithContext(s.ctx)
+	handler.ServeHTTP(s.recorder, req)
+	resp := s.recorder.Result()
+	c.Assert(resp.StatusCode, Equals, http.StatusOK)
+
+	var obtained interface{}
+	c.Assert(json.NewDecoder(resp.Body).Decode(&obtained), IsNil)
+	c.Assert(obtained, DeepEquals, map[string]interface{}{})
+}
+
+func (s *PackageSuite) TestPrint(c *C) {
+	service := NewService(s.logger)
+	service = NewLoggingService(s.logger, service)
+	handler := MakeHandler(s.ctx, service, s.logger)
+
+	request := map[string]interface{}{}
+	requestJSON, err := json.Marshal(request)
+	c.Assert(err, IsNil)
+
+	req := httptest.NewRequest(
+		"POST", "/printer/v1/print",
+		bytes.NewReader(requestJSON)).WithContext(s.ctx)
 	handler.ServeHTTP(s.recorder, req)
 	resp := s.recorder.Result()
 	c.Assert(resp.StatusCode, Equals, http.StatusOK)
