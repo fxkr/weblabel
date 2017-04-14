@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	"github.com/go-kit/kit/log"
+	"github.com/spf13/viper"
 
 	"github.com/fxkr/weblabel/printer"
 )
@@ -19,8 +20,6 @@ type Config struct {
 }
 
 func Run() {
-	config := &Config{Address: "127.0.0.1:8080"}
-
 	ctx := context.Background()
 
 	// Logging
@@ -28,6 +27,22 @@ func Run() {
 	logger = log.NewLogfmtLogger(os.Stderr)
 	logger = log.NewSyncLogger(logger)
 	logger = log.With(logger, "ts", log.DefaultTimestampUTC)
+
+	// Config
+	var config Config
+	viper.SetDefault("Address", "127.0.0.1:8080")
+	viper.SetConfigName("config")
+	viper.AddConfigPath("/etc/weblabel/")
+	viper.AddConfigPath("$HOME/.weblabel")
+	viper.AddConfigPath(".")
+	if err := viper.ReadInConfig(); err != nil {
+		logger.Log("component", "main", "err", err)
+		return
+	}
+	if err := viper.Unmarshal(&config); err != nil {
+		logger.Log("component", "main", "err", err)
+		return
+	}
 
 	// Services
 	var psLog log.Logger = log.With(logger, "component", "printer")
