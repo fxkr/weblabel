@@ -24,6 +24,7 @@ func makeStatusEndpoint(s Service) endpoint.Endpoint {
 }
 
 type printRequest struct {
+	Text string `json:"text"`
 }
 
 type printResponse struct {
@@ -34,8 +35,8 @@ func (r printResponse) error() error { return r.Err }
 
 func makePrintEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		_ = request.(printRequest)
-		err := s.Print(ctx)
+		req := request.(printRequest)
+		err := s.Print(ctx, req)
 		return printResponse{err}, nil
 	}
 }

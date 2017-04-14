@@ -27,7 +27,7 @@ func (s *loggingService) Status(ctx context.Context) (err error) {
 	return s.Service.Status(ctx)
 }
 
-func (s *loggingService) Print(ctx context.Context) (err error) {
+func (s *loggingService) Print(ctx context.Context, req printRequest) (err error) {
 	defer func(begin time.Time) {
 		s.logger.Log(
 			"method", "Print",
@@ -35,5 +35,5 @@ func (s *loggingService) Print(ctx context.Context) (err error) {
 			"err", err,
 		)
 	}(time.Now())
-	return s.Service.Print(ctx)
+	return s.Service.Print(ctx, req)
 }

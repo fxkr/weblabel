@@ -12,15 +12,17 @@ type Service interface {
 	Status(ctx context.Context) error
 
 	// Sends a document to the printer.
-	Print(ctx context.Context) error
+	Print(ctx context.Context, req printRequest) error
 }
 
 type service struct {
-	logger log.Logger
+	printer Printer
+	logger  log.Logger
 }
 
-func NewService(logger log.Logger) Service {
+func NewService(printer Printer, logger log.Logger) Service {
 	return &service{
+		printer,
 		logger,
 	}
 }
@@ -29,6 +31,6 @@ func (s *service) Status(ctx context.Context) error {
 	return nil
 }
 
-func (s *service) Print(ctx context.Context) error {
-	return nil
+func (s *service) Print(ctx context.Context, req printRequest) error {
+	return s.printer.Text(req.Text)
 }

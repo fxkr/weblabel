@@ -17,6 +17,9 @@ type Config struct {
 
 	// Address and port to listen on, e.g. "0.0.0.0:8000".
 	Address string
+
+	// Command to execute to print. "{}" will be replaced with text.
+	PrintCommand string
 }
 
 func Run() {
@@ -31,6 +34,7 @@ func Run() {
 	// Config
 	var config Config
 	viper.SetDefault("Address", "127.0.0.1:8080")
+	viper.SetDefault("PrintCommand", "echo {}")
 	viper.SetConfigName("config")
 	viper.AddConfigPath("/etc/weblabel/")
 	viper.AddConfigPath("$HOME/.weblabel")
@@ -44,10 +48,17 @@ func Run() {
 		return
 	}
 
+	// Printer
+	p, err := printer.NewCommandPrinter(config.PrintCommand)
+	if err != nil {
+		logger.Log("component", "main", "err", err)
+		return
+	}
+
 	// Services
 	var psLog log.Logger = log.With(logger, "component", "printer")
 	var ps printer.Service
-	ps = printer.NewService(psLog)
+	ps = printer.NewService(&p, psLog)
 	ps = printer.NewLoggingService(psLog, ps)
 
 	// Service routes
