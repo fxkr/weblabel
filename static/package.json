@@ -1,0 +1,9 @@
+{
+  "name": "weblabel",
+  "version": "0.0.1",
+  "description": "A web interface for label printers.",
+  "main": "index.js",
+  "repository": "http://github.com/fxkr/weblabel",
+  "author": "Felix Kaiser",
+  "license": "AGPL-3.0"
+}
