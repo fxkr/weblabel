@@ -4,6 +4,7 @@ import (
 	"os/exec"
 
 	"github.com/mattn/go-shellwords"
+	"github.com/pkg/errors"
 )
 
 type Printer interface {
@@ -18,7 +19,7 @@ type CommandPrinter struct {
 func NewCommandPrinter(commandLine string) (CommandPrinter, error) {
 	args, err := shellwords.Parse(commandLine)
 	if err != nil {
-		return CommandPrinter{}, err
+		return CommandPrinter{}, errors.WithStack(err)
 	}
 	return CommandPrinter{args[0], args[1:]}, nil
 }

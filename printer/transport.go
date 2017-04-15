@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/pkg/errors"
 
 	kitlog "github.com/go-kit/kit/log"
 	kithttp "github.com/go-kit/kit/transport/http"
@@ -46,7 +47,7 @@ func decodePrintRequest(_ context.Context, r *http.Request) (interface{}, error)
 	var body printRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-		return nil, err
+		return nil, errors.Wrap(ErrBadRequest, err.Error())
 	}
 
 	return body, nil
@@ -54,11 +55,11 @@ func decodePrintRequest(_ context.Context, r *http.Request) (interface{}, error)
 
 func encodeResponse(ctx context.Context, w http.ResponseWriter, response interface{}) error {
 	if e, ok := response.(errorer); ok && e.error() != nil {
-		encodeError(ctx, e.error(), w)
+		encodeError(ctx, errors.WithStack(e.error()), w)
 		return nil
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	return json.NewEncoder(w).Encode(response)
+	return errors.WithStack(json.NewEncoder(w).Encode(response))
 }
 
 type errorer interface {
@@ -66,7 +67,7 @@ type errorer interface {
 }
 
 func encodeError(_ context.Context, err error, w http.ResponseWriter) {
-	switch err {
+	switch errors.Cause(err) {
 	case ErrNotFound:
 		w.WriteHeader(http.StatusNotFound)
 	case ErrBadRequest:

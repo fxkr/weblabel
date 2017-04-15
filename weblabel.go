@@ -2,12 +2,14 @@ package weblabel
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/go-kit/kit/log"
+	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 
 	"github.com/fxkr/weblabel/printer"
@@ -40,18 +42,18 @@ func Run() {
 	viper.AddConfigPath("$HOME/.weblabel")
 	viper.AddConfigPath(".")
 	if err := viper.ReadInConfig(); err != nil {
-		logger.Log("component", "main", "err", err)
+		logger.Log("component", "main", "err", fmt.Sprintf("%+v", errors.WithStack(err)))
 		return
 	}
 	if err := viper.Unmarshal(&config); err != nil {
-		logger.Log("component", "main", "err", err)
+		logger.Log("component", "main", "err", fmt.Sprintf("%+v", errors.WithStack(err)))
 		return
 	}
 
 	// Printer
 	p, err := printer.NewCommandPrinter(config.PrintCommand)
 	if err != nil {
-		logger.Log("component", "main", "err", err)
+		logger.Log("component", "main", "err", fmt.Sprintf("%+v", errors.WithStack(err)))
 		return
 	}
 
@@ -88,7 +90,7 @@ func Run() {
 	signal.Notify(sigs, syscall.SIGINT)
 	select {
 	case err := <-errs:
-		logger.Log("component", "main", "err", err)
+		logger.Log("component", "main", "err", fmt.Sprintf("%+v", errors.WithStack(err)))
 	case <-sigs:
 	}
 }
