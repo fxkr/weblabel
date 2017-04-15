@@ -48,7 +48,7 @@ func (s *PackageSuite) TestStatus(c *C) {
 	service = NewLoggingService(s.logger, service)
 	handler := MakeHandler(s.ctx, service, s.logger)
 
-	req := httptest.NewRequest("GET", "/printer/v1/status", nil).WithContext(s.ctx)
+	req := httptest.NewRequest("GET", "/api/v1/printer/status", nil).WithContext(s.ctx)
 	handler.ServeHTTP(s.recorder, req)
 	resp := s.recorder.Result()
 	c.Assert(resp.StatusCode, Equals, http.StatusOK)
@@ -70,7 +70,7 @@ func (s *PackageSuite) TestPrint(c *C) {
 	c.Assert(err, IsNil)
 
 	req := httptest.NewRequest(
-		"POST", "/printer/v1/print",
+		"POST", "/api/v1/printer/print",
 		bytes.NewReader(requestJSON)).WithContext(s.ctx)
 	handler.ServeHTTP(s.recorder, req)
 	resp := s.recorder.Result()

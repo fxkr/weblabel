@@ -65,7 +65,7 @@ func Run() {
 
 	// Service routes
 	apiMux := http.NewServeMux()
-	apiMux.Handle("/printer/v1/", printer.MakeHandler(ctx, ps, log.With(logger, "component", "http")))
+	apiMux.Handle("/api/v1/printer/", printer.MakeHandler(ctx, ps, log.With(logger, "component", "http")))
 
 	// Headers
 	rootMux := http.NewServeMux()

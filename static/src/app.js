@@ -7,7 +7,7 @@ function onPrintButtonClick(e) {
   e.preventDefault();
 
   $.post({
-    url: target + "/printer/v1/print",
+    url: target + "/api/v1/printer/print",
     data: JSON.stringify({text: $("#label-text").val()}),
     dataType: "json",
   }).done(function(data) {

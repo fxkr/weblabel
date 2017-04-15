@@ -33,8 +33,8 @@ func MakeHandler(ctx context.Context, s Service, logger kitlog.Logger) http.Hand
 	)
 
 	r := mux.NewRouter()
-	r.Handle("/printer/v1/status", statusHandler).Methods("GET")
-	r.Handle("/printer/v1/print", printHandler).Methods("POST")
+	r.Handle("/api/v1/printer/status", statusHandler).Methods("GET")
+	r.Handle("/api/v1/printer/print", printHandler).Methods("POST")
 
 	return r
 }
