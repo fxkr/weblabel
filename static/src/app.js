@@ -1,6 +1,8 @@
 require('file-loader?name=[name].[ext]!./index.html');
 
 import Bootstrap from 'bootstrap/dist/css/bootstrap.css';
+import GithubRibbon from 'github-fork-ribbon-css/gh-fork-ribbon.css';
+
 require('./app.styl')
 
 function onPrintButtonClick(e) {
