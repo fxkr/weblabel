@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	"github.com/go-kit/kit/log"
@@ -22,6 +23,9 @@ type Config struct {
 
 	// Command to execute to print. "{}" will be replaced with text.
 	PrintCommand string
+
+	// Directory where the static files are. "" to disable serving them.
+	StaticPath string
 }
 
 func Run() {
@@ -67,17 +71,14 @@ func Run() {
 	apiMux := http.NewServeMux()
 	apiMux.Handle("/api/v1/printer/", printer.MakeHandler(ctx, ps, log.With(logger, "component", "http")))
 
-	// Headers
+	// Distinguish API / static files, set appropriate headers
 	rootMux := http.NewServeMux()
-	rootMux.Handle("/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type")
-		if r.Method == "OPTIONS" {
-			return
-		}
-		apiMux.ServeHTTP(w, r)
-	}))
+	rootHandler := makeApiRootHandler(apiMux)
+	if config.StaticPath != "" {
+		fileServer := http.FileServer(http.Dir(config.StaticPath))
+		rootHandler = makeCombinedRootHandler(rootHandler, fileServer)
+	}
+	rootMux.Handle("/", rootHandler)
 
 	// Serve
 	errs := make(chan error, 1)
@@ -92,5 +93,27 @@ func Run() {
 	case err := <-errs:
 		logger.Log("component", "main", "err", fmt.Sprintf("%+v", errors.WithStack(err)))
 	case <-sigs:
+	}
+}
+
+func makeCombinedRootHandler(apiHandler, fileHandler http.Handler) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if strings.HasPrefix(r.URL.Path, "/api/") {
+			apiHandler.ServeHTTP(w, r)
+		} else {
+			fileHandler.ServeHTTP(w, r)
+		}
+	}
+}
+
+func makeApiRootHandler(apiHandler http.Handler) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Origin, Content-Type")
+		if r.Method == "OPTIONS" {
+			return
+		}
+		apiHandler.ServeHTTP(w, r)
 	}
 }
