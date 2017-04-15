@@ -12,7 +12,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: 'weblabel.bundle.js',
-    publicPath: '/assets',
+    publicPath: '/',
   },
 
   devServer: {

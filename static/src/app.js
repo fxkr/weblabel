@@ -1,3 +1,5 @@
+require('file-loader?name=[name].[ext]!./index.html');
+
 import Bootstrap from 'bootstrap/dist/css/bootstrap.css';
 require('./app.styl')
 
