@@ -17,6 +17,12 @@ module.exports = {
 
   devServer: {
     contentBase: path.resolve(__dirname, './src'),
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8081/',
+        secure: false
+      },
+    },
   },
 
   module: {
