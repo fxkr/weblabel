@@ -1,0 +1,11 @@
+[Unit]
+Description=A web interface for label printers
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/weblabel
+User=root
+
+[Install]
+WantedBy=multi-user.target
