@@ -16,7 +16,7 @@ WORK_DIR=$(mktemp -d)
 if [[ ! "$WORK_DIR" || ! -d "$WORK_DIR" ]]; then
   exit 1
 fi
-function cleanup {      
+function cleanup {
   rm -rf "$WORK_DIR"
 }
 trap cleanup EXIT
