@@ -8,7 +8,8 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "bootstrap": "next",
-    "github-fork-ribbon-css": "^0.2.1"
+    "github-fork-ribbon-css": "^0.2.1",
+    "noty": "^3.0.1"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",
