@@ -1,9 +1,9 @@
-require('file-loader?name=[name].[ext]!./index.html');
+import 'file-loader?name=[name].[ext]!./index.html';
 
-import Bootstrap from 'bootstrap/dist/css/bootstrap.css';
-import GithubRibbon from 'github-fork-ribbon-css/gh-fork-ribbon.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'github-fork-ribbon-css/gh-fork-ribbon.css';
+import './app.styl';
 
-require('./app.styl')
 
 function onPrintButtonClick(e) {
   e.preventDefault();
