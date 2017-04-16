@@ -2,6 +2,7 @@ package printer
 
 import (
 	"os/exec"
+	"sync"
 
 	"github.com/mattn/go-shellwords"
 	"github.com/pkg/errors"
@@ -12,6 +13,7 @@ type Printer interface {
 }
 
 type CommandPrinter struct {
+	sync.Mutex
 	Name string
 	Args []string
 }
@@ -21,10 +23,13 @@ func NewCommandPrinter(commandLine string) (CommandPrinter, error) {
 	if err != nil {
 		return CommandPrinter{}, errors.WithStack(err)
 	}
-	return CommandPrinter{args[0], args[1:]}, nil
+	return CommandPrinter{Name: args[0], Args: args[1:]}, nil
 }
 
 func (p *CommandPrinter) Text(text string) error {
+	p.Lock()
+	defer p.Unlock()
+
 	cmd := exec.Command(p.Name, p.getArgs(text)...)
 	return cmd.Run()
 }
