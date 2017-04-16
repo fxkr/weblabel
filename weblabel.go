@@ -42,9 +42,10 @@ func Run() {
 	viper.SetDefault("Address", "127.0.0.1:8080")
 	viper.SetDefault("PrintCommand", "echo {}")
 	viper.SetConfigName("config")
-	viper.AddConfigPath("/etc/weblabel/")
-	viper.AddConfigPath("$HOME/.weblabel")
 	viper.AddConfigPath(".")
+	viper.AddConfigPath("$HOME/.weblabel")
+	viper.AddConfigPath("/etc/weblabel/")
+	viper.AddConfigPath("/usr/share/weblabel/")
 	if err := viper.ReadInConfig(); err != nil {
 		logger.Log("component", "main", "err", fmt.Sprintf("%+v", errors.WithStack(err)))
 		return
