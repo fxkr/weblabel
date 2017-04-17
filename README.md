@@ -1,5 +1,7 @@
 # weblabel - A web interface for label printers
 
+![image](https://cloud.githubusercontent.com/assets/389616/25075287/7a33bc96-2311-11e7-91b2-8dedc52a7c8b.png)
+
 
 ## Installation
 
