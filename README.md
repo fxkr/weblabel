@@ -5,7 +5,7 @@
 
 ## Installation
 
-1. Add the [packagecloud.io/fxkr/weblabel](https://packagecloud.io/fxkr/weblabel/install) repository and install `packagecloud` via your package manager. Currently, Debian 8 (x86_64, armhf) and Fedora 25 (x86_64). Contact me if you need more.
+1. Add the [packagecloud.io/fxkr/weblabel](https://packagecloud.io/fxkr/weblabel/install) repository and install `weblabel` via your package manager. Currently, Debian 8 (x86_64, armhf) and Fedora 25 (x86_64). Contact me if you need more.
 
 2. Install a tool like [ptouch-print](https://github.com/dradermacher/ptouch-print) that takes a text to print on the command line. At the moment, you'll likely need to compile this yourself. This won't be necessary in the future.
 
