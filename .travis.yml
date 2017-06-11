@@ -5,3 +5,8 @@ go:
   - 1.7.x
 
 dist: trusty
+
+addons:
+  apt:
+    packages:
+      - fonts-dejavu
