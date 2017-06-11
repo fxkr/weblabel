@@ -14,6 +14,7 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/fxkr/weblabel/printer"
+	"github.com/fxkr/weblabel/renderer"
 )
 
 type Config struct {
@@ -62,15 +63,27 @@ func Run() {
 		return
 	}
 
+	// Renderer
+	r, err := renderer.NewImageRenderer()
+	if err != nil {
+		logger.Log("component", "main", "err", fmt.Sprintf("%+v", errors.WithStack(err)))
+		return
+	}
+
 	// Services
 	var psLog log.Logger = log.With(logger, "component", "printer")
 	var ps printer.Service
 	ps = printer.NewService(&p, psLog)
 	ps = printer.NewLoggingService(psLog, ps)
+	var rsLog log.Logger = log.With(logger, "component", "renderer")
+	var rs renderer.Service
+	rs = renderer.NewService(&r, rsLog)
+	rs = renderer.NewLoggingService(rsLog, rs)
 
 	// Service routes
 	apiMux := http.NewServeMux()
 	apiMux.Handle("/api/v1/printer/", printer.MakeHandler(ctx, ps, log.With(logger, "component", "http")))
+	apiMux.Handle("/api/v1/renderer/", renderer.MakeHandler(ctx, rs, log.With(logger, "component", "http")))
 
 	// Distinguish API / static files, set appropriate headers
 	rootMux := http.NewServeMux()
