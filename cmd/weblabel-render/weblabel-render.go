@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	font  = flag.String("font", "/usr/share/fonts/dejavu/DejaVuSans.ttf", "path to the ttf font")
+	font  = flag.String("font", "", "path to the ttf font")
 	text  = flag.String("text", ":-)", "one line of text to put on the label")
 	file  = flag.String("file", "label.png", "output filename")
 	debug = flag.Bool("debug", false, "enable visual debugging aids")

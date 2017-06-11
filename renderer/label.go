@@ -19,6 +19,10 @@ import (
 	"golang.org/x/image/math/fixed"
 )
 
+const (
+	DEFAULT_FONT = "/usr/share/fonts/dejavu/DejaVuSans.ttf"
+)
+
 type Label interface {
 	Render() (*image.RGBA, error)
 }
@@ -38,7 +42,13 @@ type TextLabel struct {
 }
 
 func (l *TextLabel) getFontDrawer(fontSize float64) (*font.Drawer, error) {
-	fontBytes, err := ioutil.ReadFile(l.Font)
+
+	fontPath := l.Font
+	if fontPath == "" {
+		fontPath = DEFAULT_FONT
+	}
+
+	fontBytes, err := ioutil.ReadFile(fontPath)
 	if err != nil {
 		return nil, errors.Wrap(err, "Failed to open font file")
 	}
