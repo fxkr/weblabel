@@ -4,6 +4,9 @@ import (
 	"context"
 
 	"github.com/go-kit/kit/log"
+	"github.com/pkg/errors"
+
+	"github.com/fxkr/weblabel/renderer"
 )
 
 type Service interface {
@@ -16,13 +19,15 @@ type Service interface {
 }
 
 type service struct {
-	printer Printer
-	logger  log.Logger
+	printer  Printer
+	renderer renderer.Service
+	logger   log.Logger
 }
 
-func NewService(printer Printer, logger log.Logger) Service {
+func NewService(printer Printer, renderer renderer.Service, logger log.Logger) Service {
 	return &service{
 		printer,
+		renderer,
 		logger,
 	}
 }
@@ -32,5 +37,11 @@ func (s *service) Status(ctx context.Context) error {
 }
 
 func (s *service) Print(ctx context.Context, req printRequest) error {
-	return s.printer.Text(req.Text)
+
+	img, err := s.renderer.Render(ctx, renderer.Document{Text: req.Text})
+	if err != nil {
+		return errors.Wrap(err, "Failed to render label to file")
+	}
+
+	return s.printer.Image(img)
 }

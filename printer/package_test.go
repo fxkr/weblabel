@@ -4,22 +4,38 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"image"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/go-kit/kit/log"
 	. "gopkg.in/check.v1"
+
+	"github.com/fxkr/weblabel/renderer"
 )
 
 type MockPrinter struct {
-	Texts []string
+	Images []image.Image
+	Error  error
+}
+
+func (p *MockPrinter) Image(img image.Image) error {
+	p.Images = append(p.Images, img)
+	return p.Error
+}
+
+type MockRendererService struct {
+	Image image.Image
 	Error error
 }
 
-func (p *MockPrinter) Text(text string) error {
-	p.Texts = append(p.Texts, text)
-	return p.Error
+func (r *MockRendererService) Status(ctx context.Context) error {
+	return nil
+}
+
+func (r *MockRendererService) Render(ctx context.Context, doc renderer.Document) (image.Image, error) {
+	return r.Image, r.Error
 }
 
 func Test(t *testing.T) {
@@ -34,6 +50,7 @@ type PackageSuite struct {
 	logger   log.Logger
 	recorder *httptest.ResponseRecorder
 	printer  MockPrinter
+	renderer MockRendererService
 }
 
 func (s *PackageSuite) SetUpTest(c *C) {
@@ -41,10 +58,11 @@ func (s *PackageSuite) SetUpTest(c *C) {
 	s.logger = log.NewNopLogger()
 	s.recorder = httptest.NewRecorder()
 	s.printer = MockPrinter{}
+	s.renderer = MockRendererService{}
 }
 
 func (s *PackageSuite) TestStatus(c *C) {
-	service := NewService(&s.printer, s.logger)
+	service := NewService(&s.printer, &s.renderer, s.logger)
 	service = NewLoggingService(s.logger, service)
 	handler := MakeHandler(s.ctx, service, s.logger)
 
@@ -59,7 +77,7 @@ func (s *PackageSuite) TestStatus(c *C) {
 }
 
 func (s *PackageSuite) TestPrint(c *C) {
-	service := NewService(&s.printer, s.logger)
+	service := NewService(&s.printer, &s.renderer, s.logger)
 	service = NewLoggingService(s.logger, service)
 	handler := MakeHandler(s.ctx, service, s.logger)
 
@@ -80,5 +98,5 @@ func (s *PackageSuite) TestPrint(c *C) {
 	c.Assert(json.NewDecoder(resp.Body).Decode(&obtained), IsNil)
 	c.Assert(obtained, DeepEquals, map[string]interface{}{})
 
-	c.Assert(s.printer.Texts, DeepEquals, []string{"hello"})
+	c.Assert(len(s.printer.Images), Equals, 1)
 }

@@ -21,7 +21,7 @@ func (p *ImageRenderer) Render(text string) (*image.RGBA, error) {
 
 	label := TextLabel{
 		Text:     text,
-		TapeSize: 150,
+		TapeSize: 52,
 	}
 
 	img, err := label.Render()

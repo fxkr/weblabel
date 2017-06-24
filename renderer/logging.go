@@ -29,7 +29,7 @@ func (s *loggingService) Status(ctx context.Context) (err error) {
 	return s.Service.Status(ctx)
 }
 
-func (s *loggingService) Render(ctx context.Context, req renderRequest) (img image.Image, err error) {
+func (s *loggingService) Render(ctx context.Context, doc Document) (img image.Image, err error) {
 	defer func(begin time.Time) {
 		s.logger.Log(
 			"method", "Render",
@@ -37,5 +37,5 @@ func (s *loggingService) Render(ctx context.Context, req renderRequest) (img ima
 			"err", fmt.Sprintf("%+v", err),
 		)
 	}(time.Now())
-	return s.Service.Render(ctx, req)
+	return s.Service.Render(ctx, doc)
 }

@@ -8,25 +8,27 @@ import (
 )
 
 type ServiceSuite struct {
-	ctx     context.Context
-	logger  log.Logger
-	printer MockPrinter
+	ctx      context.Context
+	logger   log.Logger
+	printer  MockPrinter
+	renderer MockRendererService
 }
 
 func (s *ServiceSuite) SetUpTest(c *C) {
 	s.ctx = context.Background()
 	s.logger = log.NewNopLogger()
 	s.printer = MockPrinter{}
+	s.renderer = MockRendererService{}
 }
 
 func (s *ServiceSuite) TestStatus(c *C) {
-	service := NewService(&s.printer, s.logger)
+	service := NewService(&s.printer, &s.renderer, s.logger)
 	c.Assert(service.Status(s.ctx), IsNil)
 }
 
 func (s *ServiceSuite) TestPrint(c *C) {
 	req := printRequest{Text: "hello"}
-	service := NewService(&s.printer, s.logger)
+	service := NewService(&s.printer, &s.renderer, s.logger)
 	c.Assert(service.Print(s.ctx, req), IsNil)
-	c.Assert(s.printer.Texts, DeepEquals, []string{"hello"})
+	c.Assert(len(s.printer.Images), Equals, 1)
 }

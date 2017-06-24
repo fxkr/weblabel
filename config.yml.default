@@ -1,4 +1,4 @@
 ---
 Address: "127.0.0.1:8080"
-PrintCommand: "echo"
+PrintCommand: "feh"
 StaticPath: "/usr/share/weblabel/static"

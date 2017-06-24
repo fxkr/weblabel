@@ -32,6 +32,8 @@
 
 You'll need [go](https://golang.org/) for the backend and  [yarn](https://yarnpkg.com/lang/en/) for the frontend.
 
+It's recommended to use a simple image viewer like [feh](https://feh.finalrewind.org/) to simulate printing.
+
 The following sections show some useful commands.
 
 ### Configuration
@@ -44,7 +46,7 @@ Put this in `config.yml`:
 ```yaml
 ---
 Address: "127.0.0.1:8081"
-PrintCommand: "notify-send {}"
+PrintCommand: "feh {}"
 StaticPath: ./static/dist/
 ```
 

@@ -26,7 +26,7 @@ func makeStatusEndpoint(s Service) endpoint.Endpoint {
 }
 
 type renderRequest struct {
-	Text string `json:"text"`
+	Document Document `json:"document"`
 }
 
 type errorResponse struct {
@@ -38,7 +38,7 @@ func (r errorResponse) error() error { return r.Err }
 func makeRenderEndpoint(s Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(renderRequest)
-		img, err := s.Render(ctx, req)
+		img, err := s.Render(ctx, req.Document)
 		err = errors.WithStack(err)
 		if err != nil {
 			return errorResponse{err}, nil

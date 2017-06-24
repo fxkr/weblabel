@@ -71,14 +71,14 @@ func Run() {
 	}
 
 	// Services
-	var psLog log.Logger = log.With(logger, "component", "printer")
-	var ps printer.Service
-	ps = printer.NewService(&p, psLog)
-	ps = printer.NewLoggingService(psLog, ps)
 	var rsLog log.Logger = log.With(logger, "component", "renderer")
 	var rs renderer.Service
 	rs = renderer.NewService(&r, rsLog)
 	rs = renderer.NewLoggingService(rsLog, rs)
+	var psLog log.Logger = log.With(logger, "component", "printer")
+	var ps printer.Service
+	ps = printer.NewService(&p, rs, psLog)
+	ps = printer.NewLoggingService(psLog, ps)
 
 	// Service routes
 	apiMux := http.NewServeMux()
