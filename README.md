@@ -14,7 +14,7 @@
     ```yaml
     ---
     Address: "0.0.0.0:80"
-    PrintCommand: "/usr/bin/ptouch-print --text {}"
+    PrintCommand: "/usr/bin/ptouch-print --image {}"
     StaticPath: "/usr/share/weblabel/static"
     ```
 
