@@ -28,6 +28,29 @@
 5. If you use a Brother 2430PC, make sure the switch is in the "E" (not "EL") position.
 
 
+## API
+
+Note: the API is not stable yet.
+
+Printing text:
+
+```
+curl 'http://localhost:8081/api/v1/printer/print' -H 'Accept: application/json' --data '{"document": {"text":"bar"}}'
+```
+
+Rendering a preview:
+
+```
+curl 'http://localhost:8081/api/v1/renderer/render' -H 'Accept: application/json' --data '{"document": {"text":"bar"}}'
+```
+
+Printing a PNG file:
+
+```
+curl 'http://localhost:8081/api/v1/printer/image' -H 'Accept: application/json' -F 'data={}' -F 'image=@label.png'
+```
+
+
 ## Development
 
 You'll need [go](https://golang.org/) for the backend and  [yarn](https://yarnpkg.com/lang/en/) for the frontend.
