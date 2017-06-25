@@ -3,7 +3,9 @@ package printer
 import (
 	"context"
 	"encoding/json"
+	"image/png"
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
@@ -32,9 +34,17 @@ func MakeHandler(ctx context.Context, s Service, logger kitlog.Logger) http.Hand
 		opts...,
 	)
 
+	printImageHandler := kithttp.NewServer(
+		makePrintImageEndpoint(s),
+		decodePrintImageRequest,
+		encodeResponse,
+		opts...,
+	)
+
 	r := mux.NewRouter()
 	r.Handle("/api/v1/printer/status", statusHandler).Methods("GET")
 	r.Handle("/api/v1/printer/print", printHandler).Methods("POST")
+	r.Handle("/api/v1/printer/image", printImageHandler).Methods("POST")
 
 	return r
 }
@@ -49,6 +59,32 @@ func decodePrintRequest(_ context.Context, r *http.Request) (interface{}, error)
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		return nil, errors.Wrap(ErrBadRequest, err.Error())
 	}
+
+	return body, nil
+}
+
+func decodePrintImageRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var body printImageRequest
+
+	r.ParseMultipartForm(2 << 20)
+
+	err := json.NewDecoder(strings.NewReader(r.FormValue("data"))).Decode(&body)
+	if err != nil {
+		return nil, errors.Wrap(ErrBadRequest, err.Error())
+	}
+
+	file, _, err := r.FormFile("image")
+	if err != nil {
+		return nil, errors.Wrap(ErrBadRequest, err.Error())
+	}
+	defer file.Close()
+
+	img, err := png.Decode(file)
+	if err != nil {
+		return nil, errors.Wrap(ErrBadRequest, err.Error())
+	}
+
+	body.Image = img
 
 	return body, nil
 }
