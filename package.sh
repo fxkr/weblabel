@@ -27,6 +27,7 @@ VERSION="${VERSION#v}"
 
 (
   cd "$SOURCE_DIR/static"
+  export PATH="$PATH:$(yarn bin)"
   webpack
 )
 
