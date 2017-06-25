@@ -7,14 +7,10 @@ import (
 	. "gopkg.in/check.v1"
 )
 
-var (
-	labelTestFont = "/usr/share/fonts/dejavu/DejaVuSans.ttf"
-)
-
 func Test(t *testing.T) {
 	_ = Suite(&TextLabelSuite{
 		Label: &TextLabel{
-			Font:     labelTestFont,
+			Font:     DEFAULT_FONT,
 			Text:     "N|",
 			TapeSize: 100,
 		},
@@ -22,7 +18,7 @@ func Test(t *testing.T) {
 	})
 	_ = Suite(&TextLabelSuite{
 		Label: &TextLabel{
-			Font:     labelTestFont,
+			Font:     DEFAULT_FONT,
 			Text:     "_N|_", // ends at border of "_", but it's below center
 			TapeSize: 100,
 		},
@@ -30,7 +26,7 @@ func Test(t *testing.T) {
 	})
 	_ = Suite(&TextLabelSuite{
 		Label: &TextLabel{
-			Font:       labelTestFont,
+			Font:       DEFAULT_FONT,
 			Text:       "N|", // image ends after some space after the "|"
 			UseAdvance: true,
 			TapeSize:   100,

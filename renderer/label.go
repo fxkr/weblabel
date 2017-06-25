@@ -10,9 +10,9 @@ import (
 	"image/color"
 	"image/draw"
 	"image/png"
-	"io/ioutil"
 	"os"
 
+	"github.com/fxkr/go-freetype-fontloader"
 	"github.com/golang/freetype/truetype"
 	"github.com/pkg/errors"
 	"golang.org/x/image/font"
@@ -20,7 +20,7 @@ import (
 )
 
 const (
-	DEFAULT_FONT = "/usr/share/fonts/dejavu/DejaVuSans.ttf"
+	DEFAULT_FONT = "DejaVuSans"
 )
 
 type Label interface {
@@ -43,19 +43,14 @@ type TextLabel struct {
 
 func (l *TextLabel) getFontDrawer(fontSize float64) (*font.Drawer, error) {
 
-	fontPath := l.Font
-	if fontPath == "" {
-		fontPath = DEFAULT_FONT
+	fontName := l.Font
+	if fontName == "" {
+		fontName = DEFAULT_FONT
 	}
 
-	fontBytes, err := ioutil.ReadFile(fontPath)
+	fontFace, err := fontloader.LoadCache(fontName)
 	if err != nil {
-		return nil, errors.Wrap(err, "Failed to open font file")
-	}
-
-	fontFace, err := truetype.Parse(fontBytes)
-	if err != nil {
-		return nil, errors.Wrap(err, "Failed to parse font file")
+		return nil, errors.Wrap(err, "Failed to load font")
 	}
 
 	fontDrawer := &font.Drawer{

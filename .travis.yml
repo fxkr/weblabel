@@ -10,3 +10,4 @@ addons:
   apt:
     packages:
       - fonts-dejavu
+      - fontconfig
