@@ -6,6 +6,8 @@ import (
 
 	"github.com/go-kit/kit/log"
 	. "gopkg.in/check.v1"
+
+	"github.com/fxkr/weblabel/renderer"
 )
 
 type ServiceSuite struct {
@@ -28,7 +30,7 @@ func (s *ServiceSuite) TestStatus(c *C) {
 }
 
 func (s *ServiceSuite) TestPrint(c *C) {
-	req := printRequest{Text: "hello"}
+	req := printRequest{renderer.Document{Text: "hello"}}
 	service := NewService(&s.printer, &s.renderer, s.logger)
 	c.Assert(service.Print(s.ctx, req), IsNil)
 	c.Assert(len(s.printer.Images), Equals, 1)

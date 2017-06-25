@@ -42,7 +42,7 @@ func (s *service) Status(ctx context.Context) error {
 
 func (s *service) Print(ctx context.Context, req printRequest) error {
 
-	img, err := s.renderer.Render(ctx, renderer.Document{Text: req.Text})
+	img, err := s.renderer.Render(ctx, req.Document)
 	if err != nil {
 		return errors.Wrap(err, "Failed to render label to file")
 	}

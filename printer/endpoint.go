@@ -6,6 +6,8 @@ import (
 
 	"github.com/go-kit/kit/endpoint"
 	"github.com/pkg/errors"
+
+	"github.com/fxkr/weblabel/renderer"
 )
 
 type statusRequest struct {
@@ -27,7 +29,7 @@ func makeStatusEndpoint(s Service) endpoint.Endpoint {
 }
 
 type printRequest struct {
-	Text string `json:"text"`
+	Document renderer.Document `json:"document"`
 }
 
 type printResponse struct {
