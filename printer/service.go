@@ -2,6 +2,7 @@ package printer
 
 import (
 	"context"
+	"image"
 
 	"github.com/go-kit/kit/log"
 	"github.com/pkg/errors"
@@ -16,6 +17,9 @@ type Service interface {
 
 	// Sends a document to the printer.
 	Print(ctx context.Context, req printRequest) error
+
+	// Directly sends raster graphics to the printer.
+	PrintImage(ctx context.Context, img image.Image) error
 }
 
 type service struct {
@@ -43,5 +47,9 @@ func (s *service) Print(ctx context.Context, req printRequest) error {
 		return errors.Wrap(err, "Failed to render label to file")
 	}
 
+	return s.printer.Image(img)
+}
+
+func (s *service) PrintImage(ctx context.Context, img image.Image) error {
 	return s.printer.Image(img)
 }

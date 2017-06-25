@@ -2,6 +2,7 @@ package printer
 
 import (
 	"context"
+	"image"
 
 	"github.com/go-kit/kit/endpoint"
 	"github.com/pkg/errors"
@@ -41,5 +42,22 @@ func makePrintEndpoint(s Service) endpoint.Endpoint {
 		err := s.Print(ctx, req)
 		err = errors.WithStack(err)
 		return printResponse{err}, nil
+	}
+}
+
+type printImageRequest struct {
+	Image image.Image `json:"-"`
+}
+
+type printImageResponse struct {
+	Err error `json:"error,omitempty"`
+}
+
+func makePrintImageEndpoint(s Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (interface{}, error) {
+		req := request.(printImageRequest)
+		err := s.PrintImage(ctx, req.Image)
+		err = errors.WithStack(err)
+		return printImageResponse{err}, nil
 	}
 }
