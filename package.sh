@@ -56,6 +56,7 @@ build() {
     -t "$TYPE" \
     -s dir \
     --deb-systemd "$SOURCE_DIR/weblabel.service" \
+    --depends "fontconfig" \
     "$ARCH_DIR/weblabel=/usr/bin/weblabel" \
     "$SOURCE_DIR/config.yml.default=/usr/share/weblabel/config.yml" \
     "$SOURCE_DIR/weblabel.service=/usr/lib/systemd/system/weblabel.sevice" \
