@@ -20,7 +20,7 @@
 
 4. (Re-)start and enable (if needed) weblabel:
 
-    ```
+    ```sh
     systemctl restart weblabel
     systemctl enable weblabel
     ```
@@ -34,19 +34,19 @@ Note: the API is not stable yet.
 
 Printing text:
 
-```
+```sh
 curl 'http://localhost:8081/api/v1/printer/print' -H 'Accept: application/json' --data '{"document": {"text":"bar"}}'
 ```
 
 Rendering a preview:
 
-```
+```sh
 curl 'http://localhost:8081/api/v1/renderer/render' -H 'Accept: application/json' --data '{"document": {"text":"bar"}}'
 ```
 
 Printing a PNG file:
 
-```
+```sh
 curl 'http://localhost:8081/api/v1/printer/image' -H 'Accept: application/json' -F 'data={}' -F 'image=@label.png'
 ```
 
@@ -81,43 +81,43 @@ export GOPATH="$(pwd)"
 
 Fetching source code and dependencies:
 
-```
+```sh
 go get github.com/fxkr/weblabel
 ```
 
 Running directly:
-```
+```sh
 go run cmd/weblabel/weblabel.go
 ```
 
 Running tests:
-```
+```sh
 go test ./...
 ```
 
 Compiling a binary:
-```
+```sh
 go build github.com/fxkr/weblabel/cmd/weblabel
 ```
 
 Cross compiling for Raspberry Pi:
-```
+```sh
 GOARM=6 GOOS=linux GOARCH=arm go build -v github.com/fxkr/weblabel/cmd/weblabel
 ```
 
 ### Frontend
 
-```
+```sh
 cd static
 ```
 
 Fetching dependencies:
-```
-yarn install 
+```sh
+yarn install
 ```
 
 Running a dev webserver:
-```
+```sh
 export PATH="$PATH:$(yarn bin)"
 webpack-dev-server
 ```
