@@ -2,6 +2,7 @@ package printer
 
 import (
 	"context"
+	"image"
 
 	"github.com/go-kit/kit/log"
 	. "gopkg.in/check.v1"
@@ -31,4 +32,12 @@ func (s *ServiceSuite) TestPrint(c *C) {
 	service := NewService(&s.printer, &s.renderer, s.logger)
 	c.Assert(service.Print(s.ctx, req), IsNil)
 	c.Assert(len(s.printer.Images), Equals, 1)
+}
+
+func (s *ServiceSuite) TestPrintImage(c *C) {
+	img := image.NewRGBA(image.Rect(0, 0, 64, 64))
+	service := NewService(&s.printer, &s.renderer, s.logger)
+	c.Assert(service.PrintImage(s.ctx, img), IsNil)
+	c.Assert(len(s.printer.Images), Equals, 1)
+	c.Assert(s.printer.Images[0], Equals, img)
 }

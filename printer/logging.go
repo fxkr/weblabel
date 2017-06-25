@@ -3,6 +3,7 @@ package printer
 import (
 	"context"
 	"fmt"
+	"image"
 	"time"
 
 	"github.com/go-kit/kit/log"
@@ -37,4 +38,15 @@ func (s *loggingService) Print(ctx context.Context, req printRequest) (err error
 		)
 	}(time.Now())
 	return s.Service.Print(ctx, req)
+}
+
+func (s *loggingService) PrintImage(ctx context.Context, img image.Image) (err error) {
+	defer func(begin time.Time) {
+		s.logger.Log(
+			"method", "PrintImage",
+			"took", time.Since(begin),
+			"err", fmt.Sprintf("%+v", err),
+		)
+	}(time.Now())
+	return s.Service.PrintImage(ctx, img)
 }
